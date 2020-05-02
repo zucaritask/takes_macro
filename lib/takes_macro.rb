@@ -1,4 +1,5 @@
 require "takes_macro/version"
+require "byebug"
 
 module TakesMacro
   def self.monkey_patch_object
@@ -8,10 +9,17 @@ module TakesMacro
   def takes(*args)
     positional_args = args.reject { |arg| arg.is_a?(Array) }
     keyword_args = if args.last.is_a?(Array)
-                     args.last.map(&:to_s)
+                     args.last.map { |arg|
+                       if arg.is_a? Hash
+                         arg
+                       else
+                         arg.to_s
+                       end
+                     }
                    else
                      []
                    end
+    byebug
     all_args = (positional_args + keyword_args).flatten.map do |arg|
       arg.to_s.delete("!")
     end
@@ -35,12 +43,16 @@ module TakesMacro
       code = if arg =~ /!$/
         arg = arg.delete("!")
         "@#{arg} = options.fetch(:#{arg})"
+      elsif arg.is_a? Hash
+        arg = arg.map do |k, v|
+          "@#{k} = #{v} "
+        end.join("\n")
       else
         "@#{arg} = options[:#{arg}]"
       end
       [code, "options.delete(:#{arg})"].join("\n")
     end.join("\n")
-
+    byebug
     define_private_attr_readers_code = all_args.map do |arg|
       <<-RUBY
         attr_reader :#{arg}

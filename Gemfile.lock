@@ -1,13 +1,14 @@
 PATH
   remote: .
   specs:
-    takes_macro (0.1.0)
+    takes_macro (1.0.1)
 
 GEM
   remote: https://rubygems.org/
   specs:
     attr_extras (5.2.0)
     benchmark-ips (2.7.2)
+    byebug (11.1.1)
     minitest (5.11.3)
     rake (10.5.0)
 
@@ -18,9 +19,10 @@ DEPENDENCIES
   attr_extras (~> 5.2.0)
   benchmark-ips (~> 2.7.2)
   bundler (~> 1.16)
+  byebug
   minitest (~> 5.0)
   rake (~> 10.0)
   takes_macro!
 
 BUNDLED WITH
-   1.16.1
+   1.17.2
